@@ -35,7 +35,7 @@
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: var(--bg-warm);
-      /* Latar Belakang Utama dari background.png */
+      /* Latar Belakang Utama */
       background-image: url('https://raw.githubusercontent.com/yuyunnailufar-yunaaa/perpustakaanyunaaa/main/background.png');
       background-size: cover;
       background-position: center;
@@ -64,7 +64,7 @@
 
     .nav-pill {
       background: rgba(255, 255, 255, 0.7);
-      border: 1px solid rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(0, 0, 0, 0.2);
       padding: 0.4rem 1.25rem;
       border-radius: 2rem;
       font-size: 0.85rem;
@@ -144,45 +144,125 @@
 
     @media(min-width: 950px) {
       .bookshelf-section {
-        grid-template-columns: 620px 1fr;
+        grid-template-columns: 600px 1fr;
       }
     }
 
-    /* Container Rak Utama dengan Latar Belakang Gambar Canva (next / next back / back) */
-    .shelf-container {
-      width: 100%;
-      height: 480px;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: left center;
+    /* Container Rak & Dekorasi Samping */
+    .shelf-stage-wrapper {
+      display: flex;
+      align-items: flex-end;
       position: relative;
-      transition: background-image 0.3s ease;
     }
 
-    /* Area Rak Buku (Menyesuaikan Ukuran Rak Kayu di Dalam Gambar) */
+    .shelf-container {
+      width: 420px;
+      height: 520px;
+      position: relative;
+    }
+
+    /* Gambar Rak Kayu Utama */
+    .img-rak-base {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    /* Dekorasi Meja & Bunga Kuning di Samping Rak */
+    .table-flower-side {
+      position: relative;
+      width: 130px;
+      margin-left: 10px;
+      margin-bottom: 25px;
+      z-index: 2;
+    }
+
+    .img-meja {
+      width: 100%;
+      display: block;
+    }
+
+    .img-bunga-kuning {
+      width: 110px;
+      position: absolute;
+      bottom: 65px;
+      left: 10px;
+    }
+
+    /* Grid Posisi Sekat Rak Kayu (3 Tingkat) */
     .shelf-inner-grid {
       position: absolute;
-      top: 40px;
-      left: 36px;
-      width: 240px;
-      height: 380px;
+      top: 25px;
+      left: 20px;
+      width: 380px;
+      height: 460px;
+      z-index: 5;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
 
     .shelf-tier {
-      height: 110px;
+      height: 140px;
       display: flex;
       align-items: flex-end;
       position: relative;
-      padding-bottom: 4px;
+      padding: 0 15px 12px;
     }
 
-    /* Pengaturan Tata Letak Buku per Rak */
-    .tier-1 { justify-content: flex-end; gap: 8px; } /* Rak Atas: di kanan boneka */
-    .tier-2 { justify-content: flex-start; gap: 8px; } /* Rak Tengah: di kiri globe */
-    .tier-3 { justify-content: space-between; align-items: flex-end; } /* Rak Bawah */
+    /* Dekorasi di Dalam Rak */
+    .deco-doll {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      height: 115px;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    .deco-flower-blue {
+      position: absolute;
+      left: 15px;
+      bottom: 12px;
+      height: 95px;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    .deco-globe {
+      position: absolute;
+      right: 20px;
+      bottom: 12px;
+      height: 95px;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    /* Tombol Navigasi Papan Kayu BACK & NEXT */
+    .nav-wooden-btn {
+      position: absolute;
+      bottom: 12px;
+      height: 45px;
+      cursor: pointer;
+      z-index: 20;
+      transition: transform 0.2s ease;
+    }
+
+    .nav-wooden-btn:hover {
+      transform: scale(1.08);
+    }
+
+    .btn-wooden-back { left: 25px; }
+    .btn-wooden-next { right: 25px; }
+
+    /* Pengaturan Tata Letak Slot Buku per Rak */
+    .tier-1 { justify-content: flex-end; gap: 12px; } /* Rak 1: Sebelah kanan boneka */
+    .tier-2 { justify-content: center; gap: 12px; } /* Rak 2: Di tengah antara bunga & globe */
+    .tier-3 { justify-content: center; gap: 12px; } /* Rak 3: Menyesuaikan papan */
 
     /* Item Buku */
     .shelf-item-wrapper {
@@ -205,23 +285,23 @@
     }
 
     .book-cover-img {
-      height: 98px;
-      width: 66px;
+      height: 110px;
+      width: 74px;
       object-fit: cover;
       border-radius: 4px;
-      box-shadow: 2px 3px 8px rgba(0,0,0,0.4);
+      box-shadow: 3px 4px 10px rgba(0,0,0,0.4);
       display: block;
     }
 
-    /* Placeholder Cover jika Gambar Kosong */
+    /* Cover Pengganti Otomatis Jika Gambar Kosong/Rusak */
     .custom-placeholder-cover {
-      height: 98px;
-      width: 66px;
+      height: 110px;
+      width: 74px;
       background: linear-gradient(135deg, #FAF6F0 0%, #E3D5C5 100%);
       border: 1.5px solid #8C6239;
       border-radius: 4px;
-      box-shadow: 2px 3px 8px rgba(0,0,0,0.4);
-      padding: 0.4rem 0.25rem;
+      box-shadow: 3px 4px 10px rgba(0,0,0,0.4);
+      padding: 0.5rem 0.3rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -230,7 +310,7 @@
     }
 
     .custom-placeholder-title {
-      font-size: 0.5rem;
+      font-size: 0.55rem;
       font-weight: 800;
       color: #3D2314;
       line-height: 1.2;
@@ -243,7 +323,7 @@
     }
 
     .custom-placeholder-author {
-      font-size: 0.4rem;
+      font-size: 0.45rem;
       font-weight: 700;
       color: #6E5344;
       text-transform: uppercase;
@@ -251,19 +331,6 @@
       white-space: nowrap;
       text-overflow: ellipsis;
     }
-
-    /* Area Klik Tombol NEXT & BACK Transparan di Atas Papan Kayu Gambar Canva */
-    .nav-click-area {
-      position: absolute;
-      bottom: 48px;
-      height: 32px;
-      cursor: pointer;
-      z-index: 50;
-      /* background: rgba(255,0,0,0.2); Uncomment untuk tes area klik */
-    }
-
-    .click-back { left: 72px; width: 52px; }
-    .click-next { left: 190px; width: 52px; }
 
     /* Pop-up HOVER saat kursor di atas buku (Tema Coklat & Krem) */
     .hover-card {
@@ -464,34 +531,48 @@
     <!-- BAGIAN 2: BOOK SHELF -->
     <section id="bookshelf" class="bookshelf-section">
       
-      <!-- Visual Rak Canva Sesuai Status Halaman -->
-      <div id="mainShelf" class="shelf-container">
-        
-        <!-- Grid Tempat Buku Menempel -->
-        <div class="shelf-inner-grid">
-          <!-- RAK 1 (Atas): 2 Buku di kanan boneka -->
-          <div class="shelf-tier tier-1">
-            <div class="shelf-item-wrapper"><div id="slot-0" class="shelf-item"></div></div>
-            <div class="shelf-item-wrapper"><div id="slot-1" class="shelf-item"></div></div>
-          </div>
+      <div class="shelf-stage-wrapper">
+        <!-- Rak Kayu Utama -->
+        <div class="shelf-container">
+          <!-- Gambar Dasar Rak -->
+          <img src="https://raw.githubusercontent.com/yuyunnailufar-yunaaa/perpustakaanyunaaa/main/rak.png" class="img-rak-base" alt="Rak Kayu" />
 
-          <!-- RAK 2 (Tengah): 2 Buku di kiri globe -->
-          <div class="shelf-tier tier-2">
-            <div class="shelf-item-wrapper"><div id="slot-2" class="shelf-item"></div></div>
-            <div class="shelf-item-wrapper"><div id="slot-3" class="shelf-item"></div></div>
-          </div>
+          <!-- Elemen Sekat & Isinya -->
+          <div class="shelf-inner-grid">
+            
+            <!-- RAK 1: Boneka di Kiri + 2 Buku di Kanan -->
+            <div class="shelf-tier tier-1">
+              <img src="https://raw.githubusercontent.com/yuyunnailufar-yunaaa/perpustakaanyunaaa/main/boneka.png" class="deco-doll" alt="Boneka" />
+              <div class="shelf-item-wrapper"><div id="slot-0" class="shelf-item"></div></div>
+              <div class="shelf-item-wrapper"><div id="slot-1" class="shelf-item"></div></div>
+            </div>
 
-          <!-- RAK 3 (Bawah): Dinamis menyesuaikan Papan Wood Navigasi -->
-          <div id="tier3Container" class="shelf-tier tier-3">
-            <div class="shelf-item-wrapper"><div id="slot-4" class="shelf-item"></div></div>
-            <div class="shelf-item-wrapper"><div id="slot-5" class="shelf-item"></div></div>
+            <!-- RAK 2: Bunga Biru Kiri + 2 Buku Tengah + Globe Kanan -->
+            <div class="shelf-tier tier-2">
+              <img src="https://raw.githubusercontent.com/yuyunnailufar-yunaaa/perpustakaanyunaaa/main/bunga%201.png" class="deco-flower-blue" alt="Bunga Biru" />
+              <div class="shelf-item-wrapper"><div id="slot-2" class="shelf-item"></div></div>
+              <div class="shelf-item-wrapper"><div id="slot-3" class="shelf-item"></div></div>
+              <img src="https://raw.githubusercontent.com/yuyunnailufar-yunaaa/perpustakaanyunaaa/main/globe.png" class="deco-globe" alt="Globe" />
+            </div>
+
+            <!-- RAK 3: Papan BACK + Buku + Papan NEXT -->
+            <div id="tier3Container" class="shelf-tier tier-3">
+              <img id="imgBackBtn" src="https://raw.githubusercontent.com/yuyunnailufar-yunaaa/perpustakaanyunaaa/main/back.png" class="nav-wooden-btn btn-wooden-back" onclick="prevGenreBookPage()" alt="Back" />
+              
+              <div class="shelf-item-wrapper"><div id="slot-4" class="shelf-item"></div></div>
+              <div class="shelf-item-wrapper"><div id="slot-5" class="shelf-item"></div></div>
+
+              <img id="imgNextBtn" src="https://raw.githubusercontent.com/yuyunnailufar-yunaaa/perpustakaanyunaaa/main/next.png" class="nav-wooden-btn btn-wooden-next" onclick="nextGenreBookPage()" alt="Next" />
+            </div>
+
           </div>
         </div>
 
-        <!-- Tombol Klik Transparan di Atas Papan Navigasi Gambar Canva -->
-        <div id="clickBack" class="nav-click-area click-back" onclick="prevGenreBookPage()" title="Halaman Sebelumnya"></div>
-        <div id="clickNext" class="nav-click-area click-next" onclick="nextGenreBookPage()" title="Halaman Berikutnya"></div>
-
+        <!-- Dekorasi Samping Rak: Meja & Bunga Kuning -->
+        <div class="table-flower-side">
+          <img src="https://raw.githubusercontent.com/yuyunnailufar-yunaaa/perpustakaanyunaaa/main/meja.png" class="img-meja" alt="Meja Kayu" />
+          <img src="https://raw.githubusercontent.com/yuyunnailufar-yunaaa/perpustakaanyunaaa/main/bunga%202.png" class="img-bunga-kuning" alt="Bunga Kuning" />
+        </div>
       </div>
 
       <!-- Detail & Navigasi Genre -->
@@ -547,8 +628,6 @@
 
   <script>
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdhaKnK0hMx_wqZi6c_gn_8frqXE1iOywJNvg7d8oDovSlN_rlFTLo6QGJvbsr5yY6ZLwFYmiCy4VY/pub?gid=0&single=true&output=csv';
-
-    const BASE_REPO_URL = 'https://raw.githubusercontent.com/yuyunnailufar-yunaaa/perpustakaanyunaaa/main/';
 
     const genresList = [
       { key: "RECOMMEND", title: 'Book <span class="highlight">recommendations</span>', desc: "A list of stories that stayed with me long after the last page." },
@@ -665,60 +744,37 @@
       const filtered = getFilteredBooksByGenre(activeGenre.key);
       const totalBooks = filtered.length;
 
-      const shelfEl = document.getElementById('mainShelf');
-      const clickBackEl = document.getElementById('clickBack');
-      const clickNextEl = document.getElementById('clickNext');
-      const tier3Container = document.getElementById('tier3Container');
+      const imgBackBtn = document.getElementById('imgBackBtn');
+      const imgNextBtn = document.getElementById('imgNextBtn');
 
-      let currentShelfType = 'next'; // 'next' | 'next-back' | 'back'
       let booksPerPage = 6;
 
+      // Atur Tampilan Tombol Wood Navigasi di Rak Bawah
       if (currentGenreBookPage === 0) {
-        if (totalBooks <= 6) {
-          currentShelfType = 'none'; // Cukup 1 hal tanpa tombol
-          booksPerPage = 6;
+        imgBackBtn.style.display = 'none';
+        if (totalBooks > 6) {
+          imgNextBtn.style.display = 'block';
+          booksPerPage = 5; // Slot ke-6 terpakai tombol NEXT
         } else {
-          currentShelfType = 'next';
+          imgNextBtn.style.display = 'none';
           booksPerPage = 6;
         }
       } else {
-        const capacitySoFar = 6 + (currentGenreBookPage - 1) * 5;
-        if (capacitySoFar + 5 < totalBooks) {
-          currentShelfType = 'next-back';
-          booksPerPage = 5;
+        imgBackBtn.style.display = 'block';
+        const capacitySoFar = 5 + (currentGenreBookPage - 1) * 4;
+        if (capacitySoFar + 4 < totalBooks) {
+          imgNextBtn.style.display = 'block';
+          booksPerPage = 4; // Terpakai BACK & NEXT
         } else {
-          currentShelfType = 'back';
-          booksPerPage = 6;
+          imgNextBtn.style.display = 'none';
+          booksPerPage = 5; // Cuma terpakai BACK
         }
-      }
-
-      // Atur Gambar Rak Sesuai Tipe
-      if (currentShelfType === 'next') {
-        shelfEl.style.backgroundImage = `url('${BASE_REPO_URL}next.png')`;
-        clickBackEl.style.display = 'none';
-        clickNextEl.style.display = 'block';
-        tier3Container.style.justifyContent = 'flex-start';
-      } else if (currentShelfType === 'next-back') {
-        shelfEl.style.backgroundImage = `url('${BASE_REPO_URL}next%20back.png')`;
-        clickBackEl.style.display = 'block';
-        clickNextEl.style.display = 'block';
-        tier3Container.style.justifyContent = 'center'; // 1 Buku tepat di tengah
-      } else if (currentShelfType === 'back') {
-        shelfEl.style.backgroundImage = `url('${BASE_REPO_URL}back.png')`;
-        clickBackEl.style.display = 'block';
-        clickNextEl.style.display = 'none';
-        tier3Container.style.justifyContent = 'flex-end';
-      } else {
-        shelfEl.style.backgroundImage = `url('${BASE_REPO_URL}next.png')`;
-        clickBackEl.style.display = 'none';
-        clickNextEl.style.display = 'none';
-        tier3Container.style.justifyContent = 'flex-start';
       }
 
       // Hitung Offset Buku yang Ditampilkan
       let startIndex = 0;
       if (currentGenreBookPage > 0) {
-        startIndex = 6 + (currentGenreBookPage - 1) * 5;
+        startIndex = 5 + (currentGenreBookPage - 1) * 4;
       }
 
       const booksToDisplay = filtered.slice(startIndex, startIndex + booksPerPage);
@@ -729,7 +785,7 @@
       // Kosongkan 6 Slot Buku di Rak
       for (let i = 0; i < 6; i++) {
         const slotEl = document.getElementById(`slot-${i}`);
-        slotEl.innerHTML = '';
+        if(slotEl) slotEl.innerHTML = '';
       }
 
       // Tampilkan Buku pada Slot
