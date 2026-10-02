@@ -40,7 +40,7 @@
       overflow-x: hidden;
     }
 
-    /* Container Latar Belakang yang dapat di-blur saat modal terbuka */
+    /* Container Latar Belakang */
     #page-content {
       transition: filter 0.3s ease;
     }
@@ -175,7 +175,7 @@
     }
 
     .shelf-item-wrapper:hover {
-      z-index: 100; /* Memastikan pop-up hover selalu di depan semua elemen buku lain */
+      z-index: 100;
     }
 
     .shelf-item {
@@ -221,7 +221,7 @@
       box-shadow: 3px 4px 10px rgba(0,0,0,0.3);
     }
 
-    /* Tooltip Pop-up HOVER (Tema Coklat & Krem, Mengambang di Atas Depan Buku) */
+    /* Tooltip Pop-up HOVER */
     .hover-card {
       position: absolute;
       bottom: 110%;
@@ -238,7 +238,6 @@
       pointer-events: none;
     }
 
-    /* Segitiga Panah Pop-up Hover */
     .hover-card::after {
       content: '';
       position: absolute;
@@ -320,7 +319,7 @@
       transform: scale(1.08);
     }
 
-    /* Modal POPUP DETAIL BUKU saat KLIK (Tema Coklat & Krem) */
+    /* Modal POPUP DETAIL BUKU saat KLIK */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -377,7 +376,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #F7EF33;
       background: #F7F1E5;
       min-width: 180px;
     }
@@ -443,7 +441,7 @@
         <div class="shelf-tier">
           <div class="shelf-item-wrapper"><div id="slot-3" class="shelf-item"></div></div>
           <div class="shelf-item-wrapper"><div id="slot-4" class="shelf-item"></div></div>
-          <div class="see-more-btn" onclick="scrollToPageList()">
+          <div class="see-more-btn" onclick="nextGenre()">
             <span>SEE<br>MORE</span>
           </div>
         </div>
@@ -470,7 +468,7 @@
     </section>
   </div>
 
-  <!-- MODAL POPUP DETAIL BUKU KLIK (Tema Coklat & Krem) -->
+  <!-- MODAL POPUP DETAIL BUKU KLIK -->
   <div id="bookModal" class="modal-overlay">
     <div class="modal-card">
       <button class="modal-close" onclick="closeModal()">✕</button>
@@ -506,11 +504,11 @@
     const genresList = [
       { key: "RECOMMEND", title: 'Book <span class="highlight">recommendations</span>', desc: "A list of stories that stayed with me long after the last page." },
       { key: "FICTION", title: 'Fiction <span class="highlight">Corner</span>', desc: "Step into imagined worlds, timeless stories, and unforgettable journeys." },
-      { key: "REAL", title: 'Real Stories <span class="highlight">& Insights</span>', desc: "Real stories, perspectives, and knowledge to expand your worldview." },
+      { key: "SELF_IMP", title: 'Self <span class="highlight">Improvement</span>', desc: "Books for personal growth, habits, mindset, and mindful living." },
+      { key: "REAL_STORIES", title: 'Real Stories <span class="highlight">& Insights</span>', desc: "Non-fiction essays, memoirs, thoughts, and real-world perspectives." },
       { key: "GENDER", title: 'Gender & <span class="highlight">Feminism</span>', desc: "Empowering voices, reflections on equality, and stories of strength." },
       { key: "COMICS", title: 'Comics & <span class="highlight">Illustrated Books</span>', desc: "Where vibrant illustrations and compelling storytelling come together." },
-      { key: "ROMANCE", title: 'Romance & <span class="highlight">Heartfelt Stories</span>', desc: "Tales of love, warmth, connection, and all the feelings in between." },
-      { key: "SPIRITUAL", title: 'Spiritual <span class="highlight">Reads</span>', desc: "Reflective reads for faith, inner peace, and spiritual growth." }
+      { key: "SPIRITUAL", title: 'Spiritual & <span class="highlight">Romance</span>', desc: "Reflective reads for faith, inner peace, love, and warm connections." }
     ];
 
     let currentGenreIdx = 0;
@@ -519,10 +517,6 @@
 
     function scrollToShelf() {
       document.getElementById('bookshelf').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function scrollToPageList() {
-      nextGenre();
     }
 
     async function fetchSpreadsheet() {
@@ -570,16 +564,17 @@
         return rawBooksData.filter(b => b.rekom);
       } else if (key === 'FICTION') {
         return rawBooksData.filter(b => b.genre.toUpperCase().includes('FIKSI') || b.genre.toUpperCase().includes('SASTRA'));
-      } else if (key === 'REAL') {
-        return rawBooksData.filter(b => b.genre.toUpperCase().includes('SELF') || b.genre.toUpperCase().includes('NON FIKSI'));
+      } else if (key === 'SELF_IMP') {
+        return rawBooksData.filter(b => b.genre.toUpperCase().includes('SELF'));
+      } else if (key === 'REAL_STORIES') {
+        // Khusus NON FIKSI / Esai / Pengetahuan
+        return rawBooksData.filter(b => b.genre.toUpperCase().includes('NON FIKSI') || b.genre.toUpperCase().includes('NON-FIKSI'));
       } else if (key === 'GENDER') {
         return rawBooksData.filter(b => b.genre.toUpperCase().includes('FEMINISME'));
       } else if (key === 'COMICS') {
         return rawBooksData.filter(b => b.genre.toUpperCase().includes('KOMIK') || b.genre.toUpperCase().includes('BERGAMBAR'));
-      } else if (key === 'ROMANCE') {
-        return rawBooksData.filter(b => b.genre.toUpperCase().includes('ROMANSA'));
       } else if (key === 'SPIRITUAL') {
-        return rawBooksData.filter(b => b.genre.toUpperCase().includes('AGAMA') || b.genre.toUpperCase().includes('SPIRITUAL'));
+        return rawBooksData.filter(b => b.genre.toUpperCase().includes('AGAMA') || b.genre.toUpperCase().includes('SPIRITUAL') || b.genre.toUpperCase().includes('ROMANSA'));
       }
       return rawBooksData;
     }
@@ -644,11 +639,9 @@
       const filtered = getFilteredBooksByGenre(activeGenre.key);
       const totalPages = Math.ceil(filtered.length / 5) || 1;
 
-      // Jika ada lebih dari 5 buku dalam genre dan belum di halaman terakhir, geser buku dulu
       if (currentGenreBookPage < totalPages - 1) {
         currentGenreBookPage++;
       } else {
-        // Jika sudah halaman terakhir buku, lanjut ke genre berikutnya
         currentGenreBookPage = 0;
         currentGenreIdx = (currentGenreIdx + 1) % genresList.length;
       }
