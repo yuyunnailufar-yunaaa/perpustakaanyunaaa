@@ -40,7 +40,7 @@
       overflow-x: hidden;
     }
 
-    /* Container Latar Belakang */
+    /* Container Latar Belakang yang blur saat modal terbuka */
     #page-content {
       transition: filter 0.3s ease;
     }
@@ -50,7 +50,7 @@
       pointer-events: none;
     }
 
-    /* Header & Navigation Pills */
+    /* Header Navigasi */
     nav {
       display: flex;
       justify-content: center;
@@ -221,7 +221,7 @@
       box-shadow: 3px 4px 10px rgba(0,0,0,0.3);
     }
 
-    /* Tooltip Pop-up HOVER */
+    /* Pop-up HOVER saat kursor di atas buku (Tema Coklat & Krem) */
     .hover-card {
       position: absolute;
       bottom: 110%;
@@ -459,7 +459,7 @@
         <!-- Tombol Geser Genre & Buku -->
         <div class="genre-nav-ctrl">
           <button class="btn-arrow" onclick="prevGenre()">‹</button>
-          <span id="genreIndexText" style="font-size: 0.85rem; font-weight: 700; color: #5C3A21;">1 / 7</span>
+          <span id="genreIndexText" style="font-size: 0.85rem; font-weight: 700; color: #5C3A21;">1 / 8</span>
           <button class="btn-arrow" onclick="nextGenre()">›</button>
           <span id="pageNavText" style="margin-left: auto; font-size: 0.8rem; font-weight: 700; color: #6E5344;"></span>
         </div>
@@ -501,14 +501,16 @@
   <script>
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdhaKnK0hMx_wqZi6c_gn_8frqXE1iOywJNvg7d8oDovSlN_rlFTLo6QGJvbsr5yY6ZLwFYmiCy4VY/pub?gid=0&single=true&output=csv';
 
+    // 8 Genre Sesuai Instruksi Eksak
     const genresList = [
       { key: "RECOMMEND", title: 'Book <span class="highlight">recommendations</span>', desc: "A list of stories that stayed with me long after the last page." },
       { key: "FICTION", title: 'Fiction <span class="highlight">Corner</span>', desc: "Step into imagined worlds, timeless stories, and unforgettable journeys." },
-      { key: "SELF_IMP", title: 'Self <span class="highlight">Improvement</span>', desc: "Books for personal growth, habits, mindset, and mindful living." },
-      { key: "REAL_STORIES", title: 'Real Stories <span class="highlight">& Insights</span>', desc: "Non-fiction essays, memoirs, thoughts, and real-world perspectives." },
+      { key: "REAL_STORIES", title: 'Real Stories <span class="highlight">& Insights</span>', desc: "Real stories, perspectives, and knowledge to expand your worldview." },
       { key: "GENDER", title: 'Gender & <span class="highlight">Feminism</span>', desc: "Empowering voices, reflections on equality, and stories of strength." },
       { key: "COMICS", title: 'Comics & <span class="highlight">Illustrated Books</span>', desc: "Where vibrant illustrations and compelling storytelling come together." },
-      { key: "SPIRITUAL", title: 'Spiritual & <span class="highlight">Romance</span>', desc: "Reflective reads for faith, inner peace, love, and warm connections." }
+      { key: "ROMANCE", title: 'Romance & <span class="highlight">Heartfelt Stories</span>', desc: "Tales of love, warmth, connection, and all the feelings in between." },
+      { key: "SPIRITUAL", title: 'Spiritual <span class="highlight">Reads</span>', desc: "Reflective reads for faith, inner peace, and spiritual growth." },
+      { key: "SELF_IMP", title: 'Self <span class="highlight">improvement</span>', desc: "Books for personal growth, habits, mindset, and mindful living." }
     ];
 
     let currentGenreIdx = 0;
@@ -563,18 +565,26 @@
       if (key === 'RECOMMEND') {
         return rawBooksData.filter(b => b.rekom);
       } else if (key === 'FICTION') {
+        // di spreadsheet: fiksi / sastra
         return rawBooksData.filter(b => b.genre.toUpperCase().includes('FIKSI') || b.genre.toUpperCase().includes('SASTRA'));
-      } else if (key === 'SELF_IMP') {
-        return rawBooksData.filter(b => b.genre.toUpperCase().includes('SELF'));
       } else if (key === 'REAL_STORIES') {
-        // Khusus NON FIKSI / Esai / Pengetahuan
+        // di spreadsheet: non fiksi
         return rawBooksData.filter(b => b.genre.toUpperCase().includes('NON FIKSI') || b.genre.toUpperCase().includes('NON-FIKSI'));
       } else if (key === 'GENDER') {
+        // di spreadsheet: feminisme
         return rawBooksData.filter(b => b.genre.toUpperCase().includes('FEMINISME'));
       } else if (key === 'COMICS') {
+        // di spreadsheet: komik/buku bergambar
         return rawBooksData.filter(b => b.genre.toUpperCase().includes('KOMIK') || b.genre.toUpperCase().includes('BERGAMBAR'));
+      } else if (key === 'ROMANCE') {
+        // di spreadsheet: romansa
+        return rawBooksData.filter(b => b.genre.toUpperCase().includes('ROMANSA'));
       } else if (key === 'SPIRITUAL') {
-        return rawBooksData.filter(b => b.genre.toUpperCase().includes('AGAMA') || b.genre.toUpperCase().includes('SPIRITUAL') || b.genre.toUpperCase().includes('ROMANSA'));
+        // di spreadsheet: keagamaan
+        return rawBooksData.filter(b => b.genre.toUpperCase().includes('AGAMA') || b.genre.toUpperCase().includes('KEAGAMAAN'));
+      } else if (key === 'SELF_IMP') {
+        // di spreadsheet: self improvement
+        return rawBooksData.filter(b => b.genre.toUpperCase().includes('SELF'));
       }
       return rawBooksData;
     }
