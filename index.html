@@ -14,13 +14,22 @@
   <style>
     :root {
       --bg-warm: #D3C1AD;
-      --text-dark: #1A1A1A;
+      --text-dark: #2A1810;
       --highlight-yellow: #FFF176;
-      --shelf-wood: #4A2E1B;
+      --shelf-wood: #3B2314;
+      --shelf-inner: #4A2E1B;
+      --pop-bg: #FFFDF9;
+      --pop-border: #8C6239;
+      --pop-text-main: #3D2314;
+      --pop-text-sub: #6E5344;
       --tag-rekom: #FEF3C7;
-      --tag-avail: #DCFCE7;
-      --tag-genre: #FCE7F3;
-      --brand-pink: #EC4899;
+      --tag-rekom-text: #B45309;
+      --tag-avail: #E8F5E9;
+      --tag-avail-text: #2E7D32;
+      --tag-borrowed: #FFEBEE;
+      --tag-borrowed-text: #C62828;
+      --tag-genre: #EFEBE9;
+      --tag-genre-text: #4E342E;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,7 +40,7 @@
       overflow-x: hidden;
     }
 
-    /* Container Latar Belakang yang dapat di-blur */
+    /* Container Latar Belakang yang dapat di-blur saat modal terbuka */
     #page-content {
       transition: filter 0.3s ease;
     }
@@ -70,7 +79,7 @@
 
     /* Section 1: Hero / Home */
     .hero-section {
-      min-height: 85vh;
+      min-height: 80vh;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -120,7 +129,7 @@
     /* Section 2: Book Shelf */
     .bookshelf-section {
       min-height: 100vh;
-      padding: 3rem 1rem;
+      padding: 2rem 1rem 4rem;
       max-width: 1200px;
       margin: 0 auto;
       display: grid;
@@ -137,8 +146,8 @@
 
     /* Visual Rak Buku Kayu */
     .shelf-container {
-      background: #3B2314;
-      border: 12px solid #2B180C;
+      background: var(--shelf-wood);
+      border: 12px solid #28160B;
       border-radius: 8px;
       padding: 12px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
@@ -149,9 +158,9 @@
     }
 
     .shelf-tier {
-      background: #52341E;
+      background: var(--shelf-inner);
       height: 140px;
-      border-bottom: 10px solid #2B180C;
+      border-bottom: 10px solid #28160B;
       display: flex;
       align-items: flex-end;
       justify-content: space-around;
@@ -159,7 +168,16 @@
       position: relative;
     }
 
-    /* Item Dekorasi & Buku di Rak */
+    /* Item Buku di Rak */
+    .shelf-item-wrapper {
+      position: relative;
+      z-index: 1;
+    }
+
+    .shelf-item-wrapper:hover {
+      z-index: 100; /* Memastikan pop-up hover selalu di depan semua elemen buku lain */
+    }
+
     .shelf-item {
       position: relative;
       cursor: pointer;
@@ -176,6 +194,7 @@
       object-fit: cover;
       border-radius: 4px;
       box-shadow: 3px 4px 10px rgba(0,0,0,0.4);
+      display: block;
     }
 
     .deco-img {
@@ -187,14 +206,14 @@
     .see-more-btn {
       height: 115px;
       width: 78px;
-      background: #8B5A2B;
-      border: 2px dashed #FFF;
+      background: #6B4423;
+      border: 2px dashed #E6D5C3;
       border-radius: 4px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: white;
+      color: #FFFDF9;
       font-weight: 800;
       font-size: 0.75rem;
       text-align: center;
@@ -202,34 +221,54 @@
       box-shadow: 3px 4px 10px rgba(0,0,0,0.3);
     }
 
-    /* Tooltip Pop-up saat HOVER */
+    /* Tooltip Pop-up HOVER (Tema Coklat & Krem, Mengambang di Atas Depan Buku) */
     .hover-card {
       position: absolute;
-      top: -10px;
-      left: 105%;
-      width: 200px;
-      background: #FFFFFF;
-      border-radius: 8px;
+      bottom: 110%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 220px;
+      background: var(--pop-bg);
+      border: 1.5px solid var(--pop-border);
+      border-radius: 10px;
       padding: 0.75rem;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-      z-index: 30;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+      z-index: 200;
       display: none;
       pointer-events: none;
     }
 
-    .shelf-item:hover .hover-card {
+    /* Segitiga Panah Pop-up Hover */
+    .hover-card::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 6px;
+      border-style: solid;
+      border-color: var(--pop-bg) transparent transparent transparent;
+    }
+
+    .shelf-item-wrapper:hover .hover-card {
       display: block;
     }
 
-    .hover-card .tag {
+    .tag {
       font-size: 0.6rem;
       font-weight: 800;
       padding: 0.15rem 0.4rem;
       border-radius: 4px;
       text-transform: uppercase;
+      display: inline-block;
     }
 
-    /* Deskripsi Genre & Navigasi Panah */
+    .tag-genre-style { background: var(--tag-genre); color: var(--tag-genre-text); }
+    .tag-rekom-style { background: var(--tag-rekom); color: var(--tag-rekom-text); }
+    .tag-avail-style { background: var(--tag-avail); color: var(--tag-avail-text); }
+    .tag-borrowed-style { background: var(--tag-borrowed); color: var(--tag-borrowed-text); }
+
+    /* Deskripsi Genre & Navigasi */
     .genre-info {
       display: flex;
       flex-direction: column;
@@ -237,19 +276,20 @@
     }
 
     .genre-title {
-      font-size: 2.8rem;
+      font-size: 2.6rem;
       font-weight: 800;
       line-height: 1.1;
       margin-bottom: 1rem;
       font-style: italic;
+      color: var(--text-dark);
     }
 
     .genre-desc {
-      font-size: 1.1rem;
-      color: #2A2A2A;
+      font-size: 1.05rem;
+      color: #3D2314;
       line-height: 1.5;
       margin-bottom: 2rem;
-      max-width: 450px;
+      max-width: 480px;
     }
 
     .genre-nav-ctrl {
@@ -259,8 +299,9 @@
     }
 
     .btn-arrow {
-      background: rgba(255,255,255,0.7);
-      border: 1px solid rgba(0,0,0,0.2);
+      background: #FFFDF9;
+      border: 1px solid var(--pop-border);
+      color: var(--pop-text-main);
       width: 42px;
       height: 42px;
       border-radius: 50%;
@@ -271,19 +312,20 @@
       font-size: 1.2rem;
       font-weight: bold;
       transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
     .btn-arrow:hover {
-      background: #FFFFFF;
+      background: #F3E9DD;
       transform: scale(1.08);
     }
 
-    /* Modal POPUP DETAIL BUKU (KLIK) */
+    /* Modal POPUP DETAIL BUKU saat KLIK (Tema Coklat & Krem) */
     .modal-overlay {
       position: fixed;
       inset: 0;
       z-index: 999;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(40, 22, 11, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -299,16 +341,18 @@
     }
 
     .modal-card {
-      background: #FFFFFF;
+      background: var(--pop-bg);
+      border: 2px solid var(--pop-border);
       border-radius: 20px;
       max-width: 650px;
       width: 100%;
       padding: 2rem;
       position: relative;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.35);
       display: flex;
       gap: 1.5rem;
       flex-direction: column;
+      color: var(--pop-text-main);
     }
 
     @media(min-width: 600px) {
@@ -323,17 +367,18 @@
       border: none;
       font-size: 1.5rem;
       cursor: pointer;
-      color: #666;
+      color: var(--pop-text-sub);
     }
 
     .modal-cover-box {
-      border: 2px dashed #F472B6;
+      border: 2px dashed var(--pop-border);
       border-radius: 12px;
       padding: 1rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #FFF5F8;
+      background: #F7EF33;
+      background: #F7F1E5;
       min-width: 180px;
     }
 
@@ -342,7 +387,7 @@
       height: 200px;
       object-fit: cover;
       border-radius: 6px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     }
 
     .modal-details {
@@ -382,23 +427,23 @@
       <div class="shelf-container">
         <!-- TIER 1 -->
         <div class="shelf-tier">
-          <img src="https://raw.githubusercontent.com/yunaaa/katalog/main/assets/doll.png" class="deco-img" alt="Doll" onerror="this.src='https://via.placeholder.com/60x80?text=Doll'" />
-          <div id="slot-0" class="shelf-item"></div>
-          <div id="slot-1" class="shelf-item"></div>
+          <img src="https://raw.githubusercontent.com/yuyunnailufar-yunaaa/katalogbukuyunaaa/main/images/doll.png" class="deco-img" alt="Doll" onerror="this.src='https://via.placeholder.com/60x80?text=Doll'" />
+          <div class="shelf-item-wrapper"><div id="slot-0" class="shelf-item"></div></div>
+          <div class="shelf-item-wrapper"><div id="slot-1" class="shelf-item"></div></div>
         </div>
 
         <!-- TIER 2 -->
         <div class="shelf-tier">
-          <img src="https://raw.githubusercontent.com/yunaaa/katalog/main/assets/flower.png" class="deco-img" alt="Flower" onerror="this.src='https://via.placeholder.com/60x80?text=Flower'" />
-          <div id="slot-2" class="shelf-item"></div>
-          <img src="https://raw.githubusercontent.com/yunaaa/katalog/main/assets/globe.png" class="deco-img" alt="Globe" onerror="this.src='https://via.placeholder.com/60x80?text=Globe'" />
+          <img src="https://raw.githubusercontent.com/yuyunnailufar-yunaaa/katalogbukuyunaaa/main/images/flower.png" class="deco-img" alt="Flower" onerror="this.src='https://via.placeholder.com/60x80?text=Flower'" />
+          <div class="shelf-item-wrapper"><div id="slot-2" class="shelf-item"></div></div>
+          <img src="https://raw.githubusercontent.com/yuyunnailufar-yunaaa/katalogbukuyunaaa/main/images/globe.png" class="deco-img" alt="Globe" onerror="this.src='https://via.placeholder.com/60x80?text=Globe'" />
         </div>
 
         <!-- TIER 3 -->
         <div class="shelf-tier">
-          <div id="slot-3" class="shelf-item"></div>
-          <div id="slot-4" class="shelf-item"></div>
-          <div class="see-more-btn" onclick="alert('Membuka katalog lengkap!')">
+          <div class="shelf-item-wrapper"><div id="slot-3" class="shelf-item"></div></div>
+          <div class="shelf-item-wrapper"><div id="slot-4" class="shelf-item"></div></div>
+          <div class="see-more-btn" onclick="scrollToPageList()">
             <span>SEE<br>MORE</span>
           </div>
         </div>
@@ -413,18 +458,19 @@
           A list of stories that stayed with me long after the last page.
         </p>
 
-        <!-- Tombol Geser Genre -->
+        <!-- Tombol Geser Genre & Buku -->
         <div class="genre-nav-ctrl">
           <button class="btn-arrow" onclick="prevGenre()">‹</button>
-          <span id="genreIndexText" style="font-size: 0.85rem; font-weight: 700; color: #555;">1 / 7</span>
+          <span id="genreIndexText" style="font-size: 0.85rem; font-weight: 700; color: #5C3A21;">1 / 7</span>
           <button class="btn-arrow" onclick="nextGenre()">›</button>
+          <span id="pageNavText" style="margin-left: auto; font-size: 0.8rem; font-weight: 700; color: #6E5344;"></span>
         </div>
       </div>
 
     </section>
   </div>
 
-  <!-- MODAL POPUP DETAIL BUKU (KLIK) -->
+  <!-- MODAL POPUP DETAIL BUKU KLIK (Tema Coklat & Krem) -->
   <div id="bookModal" class="modal-overlay">
     <div class="modal-card">
       <button class="modal-close" onclick="closeModal()">✕</button>
@@ -434,22 +480,22 @@
       </div>
 
       <div class="modal-details">
-        <div style="display: flex; gap: 0.4rem; margin-bottom: 0.5rem;">
-          <span id="mGenreTag" class="tag" style="background: #FCE7F3; color: #BE185D; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 4px;">FIKSI</span>
-          <span id="mStatusTag" class="tag" style="background: #DCFCE7; color: #15803D; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 4px;">TERSEDIA</span>
+        <div style="display: flex; gap: 0.4rem; margin-bottom: 0.5rem; flex-wrap: wrap;">
+          <span id="mGenreTag" class="tag tag-genre-style">FIKSI</span>
+          <span id="mStatusTag" class="tag tag-avail-style">TERSEDIA</span>
         </div>
 
         <h3 id="mTitle" style="font-size: 1.4rem; font-weight: 800; line-height: 1.2;">PULANG</h3>
-        <p id="mAuthor" style="font-size: 0.85rem; color: #666; font-weight: 700; margin-bottom: 1rem;">LEILA S. CHUDORI</p>
+        <p id="mAuthor" style="font-size: 0.85rem; color: var(--pop-text-sub); font-weight: 700; margin-bottom: 1rem;">LEILA S. CHUDORI</p>
 
-        <div style="font-size: 0.8rem; line-height: 1.6; color: #444; margin-bottom: 1rem;">
-          <p><strong>Penerbit:</strong> <span id="mPublisher">KPG (2012)</span></p>
-          <p><strong>Tebal Buku:</strong> <span id="mPages">474 Halaman</span></p>
-          <p><strong>Lokasi Rak:</strong> <span id="mLocation">Malang</span></p>
+        <div style="font-size: 0.8rem; line-height: 1.6; color: var(--pop-text-sub); margin-bottom: 1rem;">
+          <p><strong>Penerbit:</strong> <span id="mPublisher" style="color: var(--pop-text-main);">KPG (2012)</span></p>
+          <p><strong>Tebal Buku:</strong> <span id="mPages" style="color: var(--pop-text-main);">474 Halaman</span></p>
+          <p><strong>Lokasi Rak:</strong> <span id="mLocation" style="color: var(--pop-text-main);">Malang</span></p>
         </div>
 
-        <h4 style="font-size: 0.75rem; text-transform: uppercase; color: #888; font-weight: 800; margin-bottom: 0.25rem;">RINGKASAN / CATATAN BUKU</h4>
-        <p id="mSummary" style="font-size: 0.8rem; color: #333; line-height: 1.5;">HISTORY FICTION</p>
+        <h4 style="font-size: 0.75rem; text-transform: uppercase; color: var(--pop-text-sub); font-weight: 800; margin-bottom: 0.25rem;">RINGKASAN / CATATAN BUKU</h4>
+        <p id="mSummary" style="font-size: 0.8rem; color: var(--pop-text-main); line-height: 1.5;">HISTORY FICTION</p>
       </div>
     </div>
   </div>
@@ -468,10 +514,15 @@
     ];
 
     let currentGenreIdx = 0;
+    let currentGenreBookPage = 0;
     let rawBooksData = [];
 
     function scrollToShelf() {
       document.getElementById('bookshelf').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function scrollToPageList() {
+      nextGenre();
     }
 
     async function fetchSpreadsheet() {
@@ -502,8 +553,9 @@
             genre: getCol(r, 'GENRE'),
             rekom: getCol(r, 'REKOM').includes('👍'),
             status: getCol(r, 'TERSEDIA') || 'TERSEDIA',
+            keterangan: getCol(r, 'KETERANGAN'),
             lokasi: getCol(r, 'LOKASI') || 'Malang',
-            ringkasan: getCol(r, 'RINGKASAN') || 'Tidak ada ringkasan',
+            ringkasan: getCol(r, 'RINGKASAN'),
             cover: getCol(r, 'COVER')
           })).filter(b => b.judul);
 
@@ -512,25 +564,52 @@
       });
     }
 
+    function getFilteredBooksByGenre(genreKey) {
+      const key = genreKey.toUpperCase();
+      if (key === 'RECOMMEND') {
+        return rawBooksData.filter(b => b.rekom);
+      } else if (key === 'FICTION') {
+        return rawBooksData.filter(b => b.genre.toUpperCase().includes('FIKSI') || b.genre.toUpperCase().includes('SASTRA'));
+      } else if (key === 'REAL') {
+        return rawBooksData.filter(b => b.genre.toUpperCase().includes('SELF') || b.genre.toUpperCase().includes('NON FIKSI'));
+      } else if (key === 'GENDER') {
+        return rawBooksData.filter(b => b.genre.toUpperCase().includes('FEMINISME'));
+      } else if (key === 'COMICS') {
+        return rawBooksData.filter(b => b.genre.toUpperCase().includes('KOMIK') || b.genre.toUpperCase().includes('BERGAMBAR'));
+      } else if (key === 'ROMANCE') {
+        return rawBooksData.filter(b => b.genre.toUpperCase().includes('ROMANSA'));
+      } else if (key === 'SPIRITUAL') {
+        return rawBooksData.filter(b => b.genre.toUpperCase().includes('AGAMA') || b.genre.toUpperCase().includes('SPIRITUAL'));
+      }
+      return rawBooksData;
+    }
+
     function renderShelf() {
       const activeGenre = genresList[currentGenreIdx];
       
-      // Update Text Header Genre
+      // Update Header Genre & Navigasi
       document.getElementById('genreTitle').innerHTML = activeGenre.title;
       document.getElementById('genreDesc').innerText = activeGenre.desc;
       document.getElementById('genreIndexText').innerText = `${currentGenreIdx + 1} / ${genresList.length}`;
 
-      // Filter 5 Buku per Genre
-      let filtered = [];
-      if (activeGenre.key === 'RECOMMEND') {
-        filtered = rawBooksData.filter(b => b.rekom);
+      // Ambil Semua Buku dari Genre Terkait
+      const filtered = getFilteredBooksByGenre(activeGenre.key);
+
+      // Hitung Halaman Buku per 5 Buku
+      const totalPages = Math.ceil(filtered.length / 5) || 1;
+      if (currentGenreBookPage >= totalPages) currentGenreBookPage = 0;
+
+      const startIndex = currentGenreBookPage * 5;
+      const booksToDisplay = filtered.slice(startIndex, startIndex + 5);
+
+      const navText = document.getElementById('pageNavText');
+      if (totalPages > 1) {
+        navText.innerText = `Buku ${startIndex + 1}-${Math.min(startIndex + 5, filtered.length)} dari ${filtered.length}`;
       } else {
-        filtered = rawBooksData.filter(b => b.genre.toUpperCase().includes(activeGenre.key));
+        navText.innerText = `${filtered.length} Buku`;
       }
 
-      // Pastikan ada 5 slot buku
-      const booksToDisplay = filtered.slice(0, 5);
-
+      // Tampilkan Buku pada 5 Slot
       for (let i = 0; i < 5; i++) {
         const slotEl = document.getElementById(`slot-${i}`);
         const book = booksToDisplay[i];
@@ -542,16 +621,15 @@
           slotEl.innerHTML = `
             <img src="${coverSrc}" class="book-cover-img" alt="${book.judul}" onclick="openModal(${book.id})" />
             <div class="hover-card">
-              <div style="display:flex; gap:0.2rem; margin-bottom:0.3rem;">
-                <span class="tag" style="background:#FCE7F3; color:#BE185D;">${book.genre}</span>
-                ${book.rekom ? '<span class="tag" style="background:#FEF3C7; color:#D97706;">👍 Rekom</span>' : ''}
-                <span class="tag" style="background:${isAvail ? '#DCFCE7':'#FFE4E6'}; color:${isAvail ? '#15803D':'#BE123C'};">${isAvail ? 'Tersedia':'Dipinjam'}</span>
+              <div style="display:flex; gap:0.25rem; margin-bottom:0.35rem; flex-wrap:wrap;">
+                <span class="tag tag-genre-style">${book.genre}</span>
+                ${book.rekom ? '<span class="tag tag-rekom-style">👍 Rekom</span>' : ''}
+                <span class="tag ${isAvail ? 'tag-avail-style':'tag-borrowed-style'}">${isAvail ? 'TERSEDIA':'DIPINJAM'}</span>
               </div>
-              <h5 style="font-size:0.75rem; font-weight:800; line-height:1.2;">${book.judul}</h5>
-              <p style="font-size:0.65rem; color:#666;">${book.penulis}</p>
-              <div style="margin-top:0.4rem; font-size:0.6rem; color:#888; display:flex; justify-content:space-between;">
-                <span>📍 Rak: ${book.lokasi}</span>
-                <span style="color:#EC4899; font-weight:bold;">Detail Lengkap →</span>
+              <h5 style="font-size:0.75rem; font-weight:800; line-height:1.2; color:var(--pop-text-main);">${book.judul}</h5>
+              <p style="font-size:0.65rem; color:var(--pop-text-sub); font-weight:600; margin-top:0.15rem;">${book.penulis}</p>
+              <div style="margin-top:0.4rem; font-size:0.6rem; color:var(--pop-text-sub);">
+                <span>📍 Rak: <strong>${book.lokasi}</strong></span>
               </div>
             </div>
           `;
@@ -562,12 +640,31 @@
     }
 
     function nextGenre() {
-      currentGenreIdx = (currentGenreIdx + 1) % genresList.length;
+      const activeGenre = genresList[currentGenreIdx];
+      const filtered = getFilteredBooksByGenre(activeGenre.key);
+      const totalPages = Math.ceil(filtered.length / 5) || 1;
+
+      // Jika ada lebih dari 5 buku dalam genre dan belum di halaman terakhir, geser buku dulu
+      if (currentGenreBookPage < totalPages - 1) {
+        currentGenreBookPage++;
+      } else {
+        // Jika sudah halaman terakhir buku, lanjut ke genre berikutnya
+        currentGenreBookPage = 0;
+        currentGenreIdx = (currentGenreIdx + 1) % genresList.length;
+      }
       renderShelf();
     }
 
     function prevGenre() {
-      currentGenreIdx = (currentGenreIdx - 1 + genresList.length) % genresList.length;
+      if (currentGenreBookPage > 0) {
+        currentGenreBookPage--;
+      } else {
+        currentGenreIdx = (currentGenreIdx - 1 + genresList.length) % genresList.length;
+        const activeGenre = genresList[currentGenreIdx];
+        const filtered = getFilteredBooksByGenre(activeGenre.key);
+        const totalPages = Math.ceil(filtered.length / 5) || 1;
+        currentGenreBookPage = totalPages - 1;
+      }
       renderShelf();
     }
 
@@ -577,11 +674,18 @@
 
       document.getElementById('mTitle').innerText = book.judul;
       document.getElementById('mAuthor').innerText = book.penulis;
-      document.getElementById('mPublisher').innerText = `${book.penerbit} (${book.tahun})`;
-      document.getElementById('mPages').innerText = `${book.halaman} Halaman`;
+      document.getElementById('mPublisher').innerText = `${book.penerbit || '-'} (${book.tahun || '-'})`;
+      document.getElementById('mPages').innerText = book.halaman ? `${book.halaman} Halaman` : '-';
       document.getElementById('mLocation').innerText = book.lokasi;
-      document.getElementById('mSummary').innerText = book.ringkasan;
+      document.getElementById('mSummary').innerText = book.ringkasan || book.keterangan || 'Belum ada ringkasan untuk buku ini.';
       document.getElementById('mCover').src = book.cover || 'https://via.placeholder.com/140x200?text=Cover';
+
+      const isAvail = book.status.toUpperCase().includes('TERSEDIA');
+      const statusTag = document.getElementById('mStatusTag');
+      statusTag.innerText = isAvail ? 'TERSEDIA' : 'DIPINJAM';
+      statusTag.className = `tag ${isAvail ? 'tag-avail-style' : 'tag-borrowed-style'}`;
+
+      document.getElementById('mGenreTag').innerText = book.genre;
 
       document.body.classList.add('modal-open');
       document.getElementById('bookModal').classList.add('active');
