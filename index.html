@@ -40,7 +40,6 @@
       overflow-x: hidden;
     }
 
-    /* Container Latar Belakang yang blur saat modal terbuka */
     #page-content {
       transition: filter 0.3s ease;
     }
@@ -197,6 +196,45 @@
       display: block;
     }
 
+    /* Cover Pengganti Otomatis Jika Gambar Kosong/Rusak */
+    .custom-placeholder-cover {
+      height: 115px;
+      width: 78px;
+      background: linear-gradient(135deg, #FAF6F0 0%, #E3D5C5 100%);
+      border: 1.5px solid #8C6239;
+      border-radius: 4px;
+      box-shadow: 3px 4px 10px rgba(0,0,0,0.4);
+      padding: 0.5rem 0.35rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .custom-placeholder-title {
+      font-size: 0.55rem;
+      font-weight: 800;
+      color: #3D2314;
+      line-height: 1.25;
+      text-transform: uppercase;
+      word-break: break-word;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+    }
+
+    .custom-placeholder-author {
+      font-size: 0.45rem;
+      font-weight: 700;
+      color: #6E5344;
+      text-transform: uppercase;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
     .deco-img {
       height: 90px;
       object-fit: contain;
@@ -221,7 +259,7 @@
       box-shadow: 3px 4px 10px rgba(0,0,0,0.3);
     }
 
-    /* Pop-up HOVER saat kursor di atas buku (Tema Coklat & Krem) */
+    /* Pop-up HOVER saat kursor di atas buku */
     .hover-card {
       position: absolute;
       bottom: 110%;
@@ -395,7 +433,6 @@
 </head>
 <body>
 
-  <!-- KONTEN HALAMAN UTAMA -->
   <div id="page-content">
     
     <!-- Navigasi Utama -->
@@ -473,7 +510,7 @@
     <div class="modal-card">
       <button class="modal-close" onclick="closeModal()">✕</button>
       
-      <div class="modal-cover-box">
+      <div class="modal-cover-box" id="mCoverContainer">
         <img id="mCover" src="" class="modal-cover-img" alt="Book Cover" />
       </div>
 
@@ -501,7 +538,6 @@
   <script>
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdhaKnK0hMx_wqZi6c_gn_8frqXE1iOywJNvg7d8oDovSlN_rlFTLo6QGJvbsr5yY6ZLwFYmiCy4VY/pub?gid=0&single=true&output=csv';
 
-    // 8 Genre Sesuai Instruksi Eksak
     const genresList = [
       { key: "RECOMMEND", title: 'Book <span class="highlight">recommendations</span>', desc: "A list of stories that stayed with me long after the last page." },
       { key: "FICTION", title: 'Fiction <span class="highlight">Corner</span>', desc: "Step into imagined worlds, timeless stories, and unforgettable journeys." },
@@ -565,42 +601,60 @@
       if (key === 'RECOMMEND') {
         return rawBooksData.filter(b => b.rekom);
       } else if (key === 'FICTION') {
-        // di spreadsheet: fiksi / sastra
-        return rawBooksData.filter(b => b.genre.toUpperCase().includes('FIKSI') || b.genre.toUpperCase().includes('SASTRA'));
+        // Harus FIKSI/SASTRA murni, dan TIDAK MENGANDUNG "NON"
+        return rawBooksData.filter(b => {
+          const g = b.genre.toUpperCase();
+          return (g.includes('FIKSI') || g.includes('SASTRA')) && !g.includes('NON');
+        });
       } else if (key === 'REAL_STORIES') {
-        // di spreadsheet: non fiksi
-        return rawBooksData.filter(b => b.genre.toUpperCase().includes('NON FIKSI') || b.genre.toUpperCase().includes('NON-FIKSI'));
+        // NON FIKSI murni
+        return rawBooksData.filter(b => b.genre.toUpperCase().includes('NON'));
       } else if (key === 'GENDER') {
-        // di spreadsheet: feminisme
         return rawBooksData.filter(b => b.genre.toUpperCase().includes('FEMINISME'));
       } else if (key === 'COMICS') {
-        // di spreadsheet: komik/buku bergambar
         return rawBooksData.filter(b => b.genre.toUpperCase().includes('KOMIK') || b.genre.toUpperCase().includes('BERGAMBAR'));
       } else if (key === 'ROMANCE') {
-        // di spreadsheet: romansa
         return rawBooksData.filter(b => b.genre.toUpperCase().includes('ROMANSA'));
       } else if (key === 'SPIRITUAL') {
-        // di spreadsheet: keagamaan
         return rawBooksData.filter(b => b.genre.toUpperCase().includes('AGAMA') || b.genre.toUpperCase().includes('KEAGAMAAN'));
       } else if (key === 'SELF_IMP') {
-        // di spreadsheet: self improvement
         return rawBooksData.filter(b => b.genre.toUpperCase().includes('SELF'));
       }
       return rawBooksData;
     }
 
+    // Fungsi Render Cover Buku Utama (dengan Fallback Cover Estetis Otomatis)
+    function renderBookCoverHTML(book) {
+      const titleClean = book.judul.replace(/'/g, "&apos;");
+      const authorClean = book.penulis.replace(/'/g, "&apos;");
+
+      const fallbackCoverHTML = `
+        <div class="custom-placeholder-cover" onclick="openModal(${book.id})">
+          <div class="custom-placeholder-title">${titleClean}</div>
+          <div class="custom-placeholder-author">${authorClean}</div>
+        </div>
+      `;
+
+      if (!book.cover || book.cover.trim() === '') {
+        return fallbackCoverHTML;
+      }
+
+      return `
+        <img src="${book.cover}" class="book-cover-img" alt="${titleClean}" 
+             onclick="openModal(${book.id})" 
+             onerror="this.outerHTML=\`${fallbackCoverHTML.replace(/"/g, '&quot;')}\`"/>
+      `;
+    }
+
     function renderShelf() {
       const activeGenre = genresList[currentGenreIdx];
       
-      // Update Header Genre & Navigasi
       document.getElementById('genreTitle').innerHTML = activeGenre.title;
       document.getElementById('genreDesc').innerText = activeGenre.desc;
       document.getElementById('genreIndexText').innerText = `${currentGenreIdx + 1} / ${genresList.length}`;
 
-      // Ambil Semua Buku dari Genre Terkait
       const filtered = getFilteredBooksByGenre(activeGenre.key);
 
-      // Hitung Halaman Buku per 5 Buku
       const totalPages = Math.ceil(filtered.length / 5) || 1;
       if (currentGenreBookPage >= totalPages) currentGenreBookPage = 0;
 
@@ -614,17 +668,15 @@
         navText.innerText = `${filtered.length} Buku`;
       }
 
-      // Tampilkan Buku pada 5 Slot
       for (let i = 0; i < 5; i++) {
         const slotEl = document.getElementById(`slot-${i}`);
         const book = booksToDisplay[i];
 
         if (book) {
-          const coverSrc = book.cover || 'https://via.placeholder.com/78x115?text=Cover';
           const isAvail = book.status.toUpperCase().includes('TERSEDIA');
 
           slotEl.innerHTML = `
-            <img src="${coverSrc}" class="book-cover-img" alt="${book.judul}" onclick="openModal(${book.id})" />
+            ${renderBookCoverHTML(book)}
             <div class="hover-card">
               <div style="display:flex; gap:0.25rem; margin-bottom:0.35rem; flex-wrap:wrap;">
                 <span class="tag tag-genre-style">${book.genre}</span>
@@ -681,7 +733,13 @@
       document.getElementById('mPages').innerText = book.halaman ? `${book.halaman} Halaman` : '-';
       document.getElementById('mLocation').innerText = book.lokasi;
       document.getElementById('mSummary').innerText = book.ringkasan || book.keterangan || 'Belum ada ringkasan untuk buku ini.';
-      document.getElementById('mCover').src = book.cover || 'https://via.placeholder.com/140x200?text=Cover';
+
+      const mCoverBox = document.getElementById('mCoverContainer');
+      if (book.cover && book.cover.trim() !== '') {
+        mCoverBox.innerHTML = `<img src="${book.cover}" class="modal-cover-img" alt="Book Cover" onerror="this.outerHTML='<div class=\\'custom-placeholder-cover\\' style=\\'width:140px; height:200px; padding:1rem;\\'><div class=\\'custom-placeholder-title\\' style=\\'font-size:0.85rem;\\'>${book.judul}</div><div class=\\'custom-placeholder-author\\' style=\\'font-size:0.7rem;\\'>${book.penulis}</div></div>'"/>`;
+      } else {
+        mCoverBox.innerHTML = `<div class="custom-placeholder-cover" style="width:140px; height:200px; padding:1rem;"><div class="custom-placeholder-title" style="font-size:0.85rem;">${book.judul}</div><div class="custom-placeholder-author" style="font-size:0.7rem;">${book.penulis}</div></div>`;
+      }
 
       const isAvail = book.status.toUpperCase().includes('TERSEDIA');
       const statusTag = document.getElementById('mStatusTag');
