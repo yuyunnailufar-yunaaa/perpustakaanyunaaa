@@ -35,7 +35,7 @@
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: var(--bg-warm);
-      /* Background Utama dari background.png */
+      /* Latar Belakang Utama dari background.png */
       background-image: url('https://raw.githubusercontent.com/yuyunnailufar-yunaaa/perpustakaanyunaaa/main/background.png');
       background-size: cover;
       background-position: center;
@@ -134,48 +134,60 @@
     .bookshelf-section {
       min-height: 100vh;
       padding: 2rem 1rem 4rem;
-      max-width: 1200px;
+      max-width: 1250px;
       margin: 0 auto;
       display: grid;
       grid-template-columns: 1fr;
-      gap: 2.5rem;
+      gap: 2rem;
       align-items: center;
     }
 
-    @media(min-width: 900px) {
+    @media(min-width: 950px) {
       .bookshelf-section {
-        grid-template-columns: 460px 1fr;
+        grid-template-columns: 620px 1fr;
       }
     }
 
-    /* Visual Rak Utama yang berganti sesuai status Halaman (next.png / next back.png / back.png) */
+    /* Container Rak Utama dengan Latar Belakang Gambar Canva (next / next back / back) */
     .shelf-container {
       width: 100%;
-      min-height: 520px;
+      height: 480px;
       background-size: contain;
       background-repeat: no-repeat;
-      background-position: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 35px 25px 25px;
+      background-position: left center;
       position: relative;
       transition: background-image 0.3s ease;
     }
 
-    .shelf-tier {
-      height: 140px;
+    /* Area Rak Buku (Menyesuaikan Ukuran Rak Kayu di Dalam Gambar) */
+    .shelf-inner-grid {
+      position: absolute;
+      top: 40px;
+      left: 36px;
+      width: 240px;
+      height: 380px;
       display: flex;
-      align-items: flex-end;
-      justify-content: space-around;
-      padding-bottom: 8px;
-      position: relative;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    /* Wrapper Item Buku */
+    .shelf-tier {
+      height: 110px;
+      display: flex;
+      align-items: flex-end;
+      position: relative;
+      padding-bottom: 4px;
+    }
+
+    /* Pengaturan Tata Letak Buku per Rak */
+    .tier-1 { justify-content: flex-end; gap: 8px; } /* Rak Atas: di kanan boneka */
+    .tier-2 { justify-content: flex-start; gap: 8px; } /* Rak Tengah: di kiri globe */
+    .tier-3 { justify-content: space-between; align-items: flex-end; } /* Rak Bawah */
+
+    /* Item Buku */
     .shelf-item-wrapper {
       position: relative;
-      z-index: 1;
+      z-index: 10;
     }
 
     .shelf-item-wrapper:hover {
@@ -193,23 +205,23 @@
     }
 
     .book-cover-img {
-      height: 115px;
-      width: 78px;
+      height: 98px;
+      width: 66px;
       object-fit: cover;
       border-radius: 4px;
-      box-shadow: 3px 4px 10px rgba(0,0,0,0.4);
+      box-shadow: 2px 3px 8px rgba(0,0,0,0.4);
       display: block;
     }
 
-    /* Cover Pengganti Otomatis Jika Gambar Kosong/Rusak */
+    /* Placeholder Cover jika Gambar Kosong */
     .custom-placeholder-cover {
-      height: 115px;
-      width: 78px;
+      height: 98px;
+      width: 66px;
       background: linear-gradient(135deg, #FAF6F0 0%, #E3D5C5 100%);
       border: 1.5px solid #8C6239;
       border-radius: 4px;
-      box-shadow: 3px 4px 10px rgba(0,0,0,0.4);
-      padding: 0.5rem 0.35rem;
+      box-shadow: 2px 3px 8px rgba(0,0,0,0.4);
+      padding: 0.4rem 0.25rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -218,10 +230,10 @@
     }
 
     .custom-placeholder-title {
-      font-size: 0.55rem;
+      font-size: 0.5rem;
       font-weight: 800;
       color: #3D2314;
-      line-height: 1.25;
+      line-height: 1.2;
       text-transform: uppercase;
       word-break: break-word;
       overflow: hidden;
@@ -231,7 +243,7 @@
     }
 
     .custom-placeholder-author {
-      font-size: 0.45rem;
+      font-size: 0.4rem;
       font-weight: 700;
       color: #6E5344;
       text-transform: uppercase;
@@ -240,13 +252,26 @@
       text-overflow: ellipsis;
     }
 
+    /* Area Klik Tombol NEXT & BACK Transparan di Atas Papan Kayu Gambar Canva */
+    .nav-click-area {
+      position: absolute;
+      bottom: 48px;
+      height: 32px;
+      cursor: pointer;
+      z-index: 50;
+      /* background: rgba(255,0,0,0.2); Uncomment untuk tes area klik */
+    }
+
+    .click-back { left: 72px; width: 52px; }
+    .click-next { left: 190px; width: 52px; }
+
     /* Pop-up HOVER saat kursor di atas buku (Tema Coklat & Krem) */
     .hover-card {
       position: absolute;
       bottom: 110%;
       left: 50%;
       transform: translateX(-50%);
-      width: 220px;
+      width: 210px;
       background: var(--pop-bg);
       border: 1.5px solid var(--pop-border);
       border-radius: 10px;
@@ -338,7 +363,7 @@
       transform: scale(1.08);
     }
 
-    /* Modal POPUP DETAIL BUKU saat KLIK (Tema Coklat & Krem) */
+    /* Modal POPUP DETAIL BUKU saat KLIK */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -439,25 +464,34 @@
     <!-- BAGIAN 2: BOOK SHELF -->
     <section id="bookshelf" class="bookshelf-section">
       
-      <!-- Visual Rak Utama dengan Background Berganti Sesuai Navigasi -->
+      <!-- Visual Rak Canva Sesuai Status Halaman -->
       <div id="mainShelf" class="shelf-container">
-        <!-- RAK 1 (Atas): 2 Buku -->
-        <div class="shelf-tier">
-          <div class="shelf-item-wrapper"><div id="slot-0" class="shelf-item"></div></div>
-          <div class="shelf-item-wrapper"><div id="slot-1" class="shelf-item"></div></div>
+        
+        <!-- Grid Tempat Buku Menempel -->
+        <div class="shelf-inner-grid">
+          <!-- RAK 1 (Atas): 2 Buku di kanan boneka -->
+          <div class="shelf-tier tier-1">
+            <div class="shelf-item-wrapper"><div id="slot-0" class="shelf-item"></div></div>
+            <div class="shelf-item-wrapper"><div id="slot-1" class="shelf-item"></div></div>
+          </div>
+
+          <!-- RAK 2 (Tengah): 2 Buku di kiri globe -->
+          <div class="shelf-tier tier-2">
+            <div class="shelf-item-wrapper"><div id="slot-2" class="shelf-item"></div></div>
+            <div class="shelf-item-wrapper"><div id="slot-3" class="shelf-item"></div></div>
+          </div>
+
+          <!-- RAK 3 (Bawah): Dinamis menyesuaikan Papan Wood Navigasi -->
+          <div id="tier3Container" class="shelf-tier tier-3">
+            <div class="shelf-item-wrapper"><div id="slot-4" class="shelf-item"></div></div>
+            <div class="shelf-item-wrapper"><div id="slot-5" class="shelf-item"></div></div>
+          </div>
         </div>
 
-        <!-- RAK 2 (Tengah): 2 Buku -->
-        <div class="shelf-tier">
-          <div class="shelf-item-wrapper"><div id="slot-2" class="shelf-item"></div></div>
-          <div class="shelf-item-wrapper"><div id="slot-3" class="shelf-item"></div></div>
-        </div>
+        <!-- Tombol Klik Transparan di Atas Papan Navigasi Gambar Canva -->
+        <div id="clickBack" class="nav-click-area click-back" onclick="prevGenreBookPage()" title="Halaman Sebelumnya"></div>
+        <div id="clickNext" class="nav-click-area click-next" onclick="nextGenreBookPage()" title="Halaman Berikutnya"></div>
 
-        <!-- RAK 3 (Bawah): Dinamis 1 atau 2 Buku -->
-        <div class="shelf-tier">
-          <div class="shelf-item-wrapper"><div id="slot-4" class="shelf-item"></div></div>
-          <div class="shelf-item-wrapper"><div id="slot-5" class="shelf-item"></div></div>
-        </div>
       </div>
 
       <!-- Detail & Navigasi Genre -->
@@ -629,35 +663,57 @@
       document.getElementById('genreIndexText').innerText = `${currentGenreIdx + 1} / ${genresList.length}`;
 
       const filtered = getFilteredBooksByGenre(activeGenre.key);
-
-      // Tentukan Jumlah Buku per Halaman Sesuai Aturan Rak
-      // Halaman Pertama = 6 Buku (Rak 1: 2, Rak 2: 2, Rak 3: 2)
-      // Halaman Tengah = 5 Buku (Rak 1: 2, Rak 2: 2, Rak 3: 1)
-      // Halaman Terakhir = 6 Buku (Rak 1: 2, Rak 2: 2, Rak 3: 2)
-      
-      let booksPerPage = 6;
       const totalBooks = filtered.length;
-      
-      // Tentukan Gambar Rak Mana yang Dipakai
+
       const shelfEl = document.getElementById('mainShelf');
-      
-      let shelfImg = 'next.png'; // default awal
+      const clickBackEl = document.getElementById('clickBack');
+      const clickNextEl = document.getElementById('clickNext');
+      const tier3Container = document.getElementById('tier3Container');
+
+      let currentShelfType = 'next'; // 'next' | 'next-back' | 'back'
+      let booksPerPage = 6;
+
       if (currentGenreBookPage === 0) {
-        shelfImg = 'next.png';
-        booksPerPage = 6;
+        if (totalBooks <= 6) {
+          currentShelfType = 'none'; // Cukup 1 hal tanpa tombol
+          booksPerPage = 6;
+        } else {
+          currentShelfType = 'next';
+          booksPerPage = 6;
+        }
       } else {
-        // Cek apakah halaman berikutnya masih ada
-        const currentCapacity = 6 + (currentGenreBookPage - 1) * 5;
-        if (currentCapacity + 5 < totalBooks) {
-          shelfImg = 'next back.png'; // Rak Tengah
+        const capacitySoFar = 6 + (currentGenreBookPage - 1) * 5;
+        if (capacitySoFar + 5 < totalBooks) {
+          currentShelfType = 'next-back';
           booksPerPage = 5;
         } else {
-          shelfImg = 'back.png'; // Rak Terakhir
+          currentShelfType = 'back';
           booksPerPage = 6;
         }
       }
 
-      shelfEl.style.backgroundImage = `url('${BASE_REPO_URL}${encodeURIComponent(shelfImg)}')`;
+      // Atur Gambar Rak Sesuai Tipe
+      if (currentShelfType === 'next') {
+        shelfEl.style.backgroundImage = `url('${BASE_REPO_URL}next.png')`;
+        clickBackEl.style.display = 'none';
+        clickNextEl.style.display = 'block';
+        tier3Container.style.justifyContent = 'flex-start';
+      } else if (currentShelfType === 'next-back') {
+        shelfEl.style.backgroundImage = `url('${BASE_REPO_URL}next%20back.png')`;
+        clickBackEl.style.display = 'block';
+        clickNextEl.style.display = 'block';
+        tier3Container.style.justifyContent = 'center'; // 1 Buku tepat di tengah
+      } else if (currentShelfType === 'back') {
+        shelfEl.style.backgroundImage = `url('${BASE_REPO_URL}back.png')`;
+        clickBackEl.style.display = 'block';
+        clickNextEl.style.display = 'none';
+        tier3Container.style.justifyContent = 'flex-end';
+      } else {
+        shelfEl.style.backgroundImage = `url('${BASE_REPO_URL}next.png')`;
+        clickBackEl.style.display = 'none';
+        clickNextEl.style.display = 'none';
+        tier3Container.style.justifyContent = 'flex-start';
+      }
 
       // Hitung Offset Buku yang Ditampilkan
       let startIndex = 0;
@@ -676,7 +732,7 @@
         slotEl.innerHTML = '';
       }
 
-      // Tampilkan Buku pada Slot Sesuai Tata Letak
+      // Tampilkan Buku pada Slot
       booksToDisplay.forEach((book, i) => {
         const slotEl = document.getElementById(`slot-${i}`);
         if (!slotEl) return;
@@ -701,32 +757,27 @@
       });
     }
 
-    function nextGenre() {
-      const activeGenre = genresList[currentGenreIdx];
-      const filtered = getFilteredBooksByGenre(activeGenre.key);
-      const totalBooks = filtered.length;
+    function nextGenreBookPage() {
+      currentGenreBookPage++;
+      renderShelf();
+    }
 
-      let currentCapacity = 6;
+    function prevGenreBookPage() {
       if (currentGenreBookPage > 0) {
-        currentCapacity = 6 + (currentGenreBookPage - 1) * 5;
+        currentGenreBookPage--;
+        renderShelf();
       }
+    }
 
-      if (currentCapacity < totalBooks) {
-        currentGenreBookPage++;
-      } else {
-        currentGenreBookPage = 0;
-        currentGenreIdx = (currentGenreIdx + 1) % genresList.length;
-      }
+    function nextGenre() {
+      currentGenreBookPage = 0;
+      currentGenreIdx = (currentGenreIdx + 1) % genresList.length;
       renderShelf();
     }
 
     function prevGenre() {
-      if (currentGenreBookPage > 0) {
-        currentGenreBookPage--;
-      } else {
-        currentGenreIdx = (currentGenreIdx - 1 + genresList.length) % genresList.length;
-        currentGenreBookPage = 0;
-      }
+      currentGenreBookPage = 0;
+      currentGenreIdx = (currentGenreIdx - 1 + genresList.length) % genresList.length;
       renderShelf();
     }
 
